@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<link rel="shortcut icon" href="favicon.ico">
+		<link rel="shortcut icon" href=/media/favicon.ico>
 		<title>Extract XML/HTML tags from (plain) text</title>
 		<script src="./jquery-3.7.1.min.js" ></script>
 		<script>
@@ -53,6 +53,13 @@
 			padding-bottom: 1em;
 			margin-top: 0;
 		}
+		span#img {
+			background-image: url('favicon.ico');
+			background-repeat: no-repeat;
+			padding-left: 36px;
+			padding-right: 18px;
+			display: inline-block;
+		}
 		textarea {
 			min-height: 50%;
 			width: 49%;
@@ -83,7 +90,7 @@
 		</style>
 	</head>
 	<body>
-		<h1>List XML Tags!</h1><table><tr><td></td><td>
+		<h1><span id='img'>List XML Tags!</span></h1><table><tr><td></td><td>
 		<div><button id='doit'>Extract!</button></td><td><button id='dedupe'>Deduplicate!</button></div></td></tr></table>
 		<textarea id='left'></textarea>
 		<textarea id='right' placeholder='The output will appear here'></textarea>
