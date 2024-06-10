@@ -2,34 +2,70 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<link rel="shortcut icon" href=./favicon.ico>
-		<title>Extract XML/HTML tags from (plain) text</title>
+		<link rel="shortcut icon" href="./favicon.ico">
+		<title>Turn long URL into short a href</title>
 		<script src="./jquery-3.7.1.min.js" ></script>
 		<script>
-		// https://dev.to/diraskjavascript/javascript-remove-duplicated-lines-2i9e
-		const newLineExpression = /\r\n|\n\r|\n|\r/g;
-
-		const removeDuplicatedLines = (text) => {
-		return text.split(newLineExpression)
-		.filter((item, index, array) => array.indexOf(item) === index)
-		.join('\n');
-		};
-		
 	    jQuery(function() {
 	    	// Document is ready
 			$('#doit').on('click', function() {
-				const code = $('#left').val();
-				let tags = code
-				.replace('\n','')
-				.replace(/^[^<]*/g, '')
-				.replace(/[^>]*$/g, '')
-				.replace(/>[^>]*[^<]</g, '>\n<');
-				$('#right').text(tags);
-			});
-			$('#dedupe').on('click', function() {
-				$('#right').text(
-					removeDuplicatedLines($('#right').text())
-				);
+				const urls = $('#left').val().trim().split(/\s+/);
+				shorturls1 = '';
+				shorturls2 = '';
+				shorturls3 = '';
+				shorturls4 = '';
+				shorturls5 = '';
+				shorturls6 = '';
+				shorturls7 = '';
+				
+				urls.forEach( url => {
+					let shorturl = url.replace(/^(https:\/\/)/,"").replace(/^(http:\/\/)/,"").replace(/^(www\.)/,"");
+					
+					shorturl2 = shorturl;
+					shorturl3 = shorturl;
+					shorturl4 = shorturl;
+					shorturl5 = shorturl;
+					shorturl6 = shorturl;
+					shorturl7 = shorturl;
+					
+					if (shorturl.length > 30) {
+						shorturl2 = shorturl.substring(0,29) + '…';
+						shorturl3 = '…' + shorturl.slice(-29);
+						shorturl4 = shorturl.substring(0,14) + '…' + shorturl.slice(-14);
+						if(shorturl.includes('/')) {
+							let supershort = shorturl.split('/').pop()
+							
+							shorturl5 = supershort;
+							shorturl6 = supershort;
+							
+							if (supershort.length > 30) {
+								shorturl5 = supershort.substring(0,29) + '…';
+								shorturl6 = supershort.substring(0,14) + '…' + shorturl.split('/').pop().slice(-14);
+							}
+							
+							let afterlast = shorturl.substring(shorturl.indexOf('/') + 1);
+							shorturl7 = afterlast;
+							
+							if (afterlast.length > 30) {
+								shorturl7 = afterlast.substring(0,14) + '…' + afterlast.slice(-14);
+							}
+						} else { shorturl5 = shorurl2; }
+					}
+					// keep URL
+					shorturls1 += '<a href="' + url + '">' + shorturl  + '</a>\n'
+					shorturls2 += '<a href="' + url + '">' + shorturl2 + '</a>\n'
+					shorturls3 += '<a href="' + url + '">' + shorturl3 + '</a>\n'
+					shorturls4 += '<a href="' + url + '">' + shorturl4 + '</a>\n'
+					
+					// after last '/'
+					shorturls5 += '<a href="' + url + '">' + shorturl5 + '</a>\n'
+					shorturls6 += '<a href="' + url + '">' + shorturl6 + '</a>\n'
+					
+					// after first '/'
+					shorturls7 += '<a href="' + url + '">' + shorturl7 + '</a>\n'
+				});
+				$('#right').val(shorturls7 + '\n\n' + shorturls6 + '\n\n' + shorturls5 + '\n\n' + shorturls4 + '\n\n' + shorturls3 + '\n\n' + shorturls2 + '\n\n' + shorturls1);
+				$('#preview').html(shorturls7.replaceAll('\n','<br>') + '<br><br>' + shorturls6.replaceAll('\n','<br>') + '<br><br>' + shorturls5.replaceAll('\n','<br>') + '<br><br>' + shorturls4.replaceAll('\n','<br>') + '<br><br>' + shorturls3.replaceAll('\n','<br>') + '<br><br>' + shorturls2.replaceAll('\n','<br>') + '<br><br>' + shorturls1.replaceAll('\n','<br>'));
 			});
 			
 	    });
@@ -47,7 +83,7 @@
 		}
 		h1 {
 			color: white;
-			background-color: DarkCyan;
+			background-color: RebeccaPurple;
 			text-align: center;
 			padding-top: 1em;
 			padding-bottom: 1em;
@@ -62,7 +98,15 @@
 		}
 		textarea {
 			min-height: 50%;
-			width: 49%;
+			width: 39%;
+		}
+		#preview {
+			display: inline-block;
+			min-height: 50%;
+			width: 19%;
+			vertical-align: top;
+			text-align: left;
+			overflow: hidden;
 		}
 		div {
 			text-align: center;
@@ -76,12 +120,6 @@
 			font-size: 125%;
 			font-weight: bold;
 		}
-		button#doit {
-			padding: .5em 2em;
-			margin-bottom: .5em;
-			font-size: 110%;
-			font-weight: bold;
-		}
 		table { width: 100%; }
 		td { width: 33.3%; }
 		td:nth-child(3) { text-align: left; }
@@ -90,10 +128,11 @@
 		</style>
 	</head>
 	<body>
-		<h1><span id='img'>List XML Tags!</span></h1><table><tr><td></td><td>
-		<div><button id='doit'>Extract!</button></td><td><button id='dedupe'>Deduplicate!</button></div></td></tr></table>
+		<h1><span id='img'>Shorten A HREF!</span></h1>
+		<div><button id='doit'>Shorten!</button></div>
 		<textarea id='left'></textarea>
 		<textarea id='right' placeholder='The output will appear here'></textarea>
-		<p id='subtle'>Notice tags aren't tags Before importing files into CAT.</p><p id='sehrsubtle'>Made in preparation for translating <a target='_blank' href='https://store.steampowered.com/app/2520000/HYNPYTOL/'>HYNPYTOL</a>.</p>
+		<div id='preview'>The output will be rendered here</div>
+		<p id='subtle'>For when a forum doesn't shorten URL <span title="does it upset you 'link' is used twice?">Links</a> for you.</p><p id='sehrsubtle'><a target='_blank' href='https://github.com/qubodup/short-ahref'>Code on GitHub</a>. Made for <a target='_blank' href='https://freesound.org/forum/'>Freesound Forums</a> (as of June 2024). Icon made with <a target='_blank' href="https://www.xiconeditor.com/">X-Icon Editor</a></p>
 	</body>
-</html>	
+</html>
